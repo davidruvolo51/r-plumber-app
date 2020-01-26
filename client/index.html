@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" type="text/css" href="css/styles.css" />
+    <title>R Plumber App</title>
+</head>
+<body>
+    <header class="header">
+        <h1>R Plumber</h1>
+    </header>
+    <main class="main">
+        <section class="section">
+            <h2>About</h2>
+            <p>This application replicates a few applications - the <a href="https://davidruvolo51.github.io/shinytutorials/tutorials/sass-in-shiny/">sass in shiny tutorial</a> and the <a href="https://davidruvolo51.github.io/shinytutorials/tutorials/responsive-tables/">responsive datatables tutorial</a>. However, this application uses plumber as a backend instead of shiny. Using plumber, allows you to create a simple, lightweight application using vanilla html, css, and js, as well as the benefit of using R as the backend.</p>
+        </section>
+        <section class="section" id="table_output">
+            <h2>Generate Table</h2>
+            <form>
+                <label>Select Records to Display</label>
+                <select id="limits" name="limits">
+                    <option value="5">5</option>
+                    <option value="10">10</option>
+                    <option value="15">15</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                    <option value="150">150</option>
+                </select>
+            </form>
+        </section>
+    </main>
+    <script src="js/index.js"></script>
+</body>
+</html>
