@@ -22,15 +22,19 @@ df <- readRDS("server/data/birds_summary.RDS")
 function(req, value = 0) {
 
     # process request
-    rows <- value
-    data <- dplyr::slice(df, 1:rows)
+    if (value == "all") {
+        data <- df
+    }
+    if (value != "all") {
+        data <- dplyr::slice(df, 1:value)
+    }
 
     # build html table
     tbl <- as.character(
         accessibleshiny::datatable(
             data = data,
             id = "birds",
-            caption = "Reporting Rates of Australian Birds in 2018"
+            caption = "Reporting Rates of Australian Birds"
         )
     )
 

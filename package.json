@@ -4,7 +4,9 @@
   "description": "using r plumber for interactive web apps",
   "main": "index.js",
   "scripts": {
-    "dev": "Rscript -e \"source('server.R')\""
+    "client": "cd client && yarn start",
+    "server": "Rscript -e \"source('server.R')\"",
+    "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\""
   },
   "keywords": [
     "r",
@@ -12,5 +14,9 @@
     "plumber"
   ],
   "author": "dcruvolo",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^5.1.0"
+  },
+  "dependencies": {}
 }

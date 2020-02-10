@@ -2,7 +2,7 @@
 #' FILE: server.R
 #' AUTHOR: David Ruvolo
 #' CREATED: 2020-01-26
-#' MODIFIED: 2020-01-26
+#' MODIFIED: 2020-02-10
 #' PURPOSE: backend for app, starts plumber
 #' STATUS: in.progress
 #' PACKAGES: plumber
@@ -14,7 +14,7 @@ library(plumber)
 
 #' create app
 app <- plumber::plumb("./server/api.R")
-app$mount("/", PlumberStatic$new("./client"))
+app$mount("/", PlumberStatic$new("./client/public"))
 
 #' start
 app$run(port = 8000)
