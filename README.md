@@ -39,11 +39,9 @@ yarn -v
 Yarn isn't necssary, but I prefer it over npm for starting the dev server (In this project anyways). Start the dev server using yarn or npm.
 
 ```bash
-# with yarn
 yarn dev
-
-# or with npm
-npm run dev
 ```
+
+The app will be available at `localhost:8000`.
 
 From here, you can continue developing the client and create new apis. If you have any questions, feel free to open a new issue.
