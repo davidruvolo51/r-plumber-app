@@ -31817,128 +31817,102 @@ function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return 
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
 
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+function _iterableToArrayLimit(arr, i) { if (!(Symbol.iterator in Object(arr) || Object.prototype.toString.call(arr) === "[object Arguments]")) { return; } var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
 
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+// define function component called <App />
+function App() {
+  // set state
+  var _useState = (0, _react.useState)(true),
+      _useState2 = _slicedToArray(_useState, 2),
+      isLoading = _useState2[0],
+      setLoading = _useState2[1];
 
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+  var _useState3 = (0, _react.useState)(""),
+      _useState4 = _slicedToArray(_useState3, 2),
+      html = _useState4[0],
+      setHTML = _useState4[1];
 
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+  (0, _react.useEffect)(function () {
+    setHTML("Hello, world!");
+  }, [isLoading]); // get input values (default values)
 
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-// define app
-var App =
-/*#__PURE__*/
-function (_Component) {
-  _inherits(App, _Component);
-
-  function App(props) {
-    var _this;
-
-    _classCallCheck(this, App);
-
-    _this = _possibleConstructorReturn(this, _getPrototypeOf(App).call(this, props));
-    _this.state = {
-      html: []
-    };
-    _this.__updateTable = _this.__updateTable.bind(_assertThisInitialized(_this));
-    return _this;
-  } // insert response
+  var _useState5 = (0, _react.useState)(5),
+      _useState6 = _slicedToArray(_useState5, 2),
+      selection = _useState6[0],
+      setSelection = _useState6[1]; // send request based on selection status
 
 
-  _createClass(App, [{
-    key: "__updateTable",
-    value: function __updateTable() {
-      // get value and update state
-      var input = document.getElementById("limits");
-      var selection = input.options[input.selectedIndex].value; // send request 
-
-      fetch("/data", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          value: selection
-        })
-      }).then(function (response) {
-        if (response.ok) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }).then(function (result) {
-        // render table - remove existing table if applicable
-        var elem = document.getElementById("table_output");
-
-        if (elem.getElementsByTagName("table").length > 0) {
-          var t = elem.querySelector("table");
-          elem.removeChild(t);
-        }
-
-        elem.insertAdjacentHTML("beforeend", result.html[0]);
-      }).catch(function (error) {
-        console.log(error);
-      });
-    } // lifecycles
-
-  }, {
-    key: "componentDidMount",
-    value: function componentDidMount() {
-      this.__updateTable();
-    } // render
-
-  }, {
-    key: "render",
-    value: function render() {
-      return _react.default.createElement(_react.default.Fragment, null, _react.default.createElement("header", {
-        className: "header"
-      }, _react.default.createElement("h1", null, "R Plumber")), _react.default.createElement("main", {
-        className: "main"
-      }, _react.default.createElement("section", {
-        className: "section"
-      }, _react.default.createElement("h2", null, "About"), _react.default.createElement("p", null, "This application replicates a few applications - the ", _react.default.createElement("a", {
-        href: "https://davidruvolo51.github.io/shinytutorials/tutorials/sass-in-shiny/"
-      }, "sass in shiny tutorial"), " and the ", _react.default.createElement("a", {
-        href: "https://davidruvolo51.github.io/shinytutorials/tutorials/responsive-tables/"
-      }, "responsive datatables tutorial"), ". This application uses Rplumber as a backend instead of shiny and uses react as the client.")), _react.default.createElement("section", {
-        className: "section",
-        id: "table_output"
-      }, _react.default.createElement("h2", null, "Generate Table"), _react.default.createElement("form", null, _react.default.createElement("label", null, "Select Records to Display"), _react.default.createElement("select", {
-        id: "limits",
-        name: "limits",
-        onChange: this.__updateTable
-      }, _react.default.createElement("option", {
-        value: "5"
-      }, "5"), _react.default.createElement("option", {
-        value: "10"
-      }, "10"), _react.default.createElement("option", {
-        value: "15"
-      }, "15"), _react.default.createElement("option", {
-        value: "25"
-      }, "25"), _react.default.createElement("option", {
-        value: "50"
-      }, "50"), _react.default.createElement("option", {
-        value: "100"
-      }, "100"), _react.default.createElement("option", {
-        value: "150"
-      }, "150"), _react.default.createElement("option", {
-        value: "all"
-      }, "All"))))));
+  (0, _react.useEffect)(function () {
+    fetch("/data", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        value: selection
+      })
+    }).then(function (response) {
+      // process response
+      if (response.ok) {
+        return response.json();
+      } else {
+        throw response;
+      }
+    }).then(function (result) {
+      // send result to state
+      setHTML(result.html);
+    }).catch(function (error) {
+      // send error to state
+      setHTML(error);
+    });
+  }, [selection]);
+  return _react.default.createElement(_react.default.Fragment, null, _react.default.createElement("header", {
+    className: "header"
+  }, _react.default.createElement("h1", null, "R Plumber")), _react.default.createElement("main", {
+    className: "main"
+  }, _react.default.createElement("section", {
+    className: "section"
+  }, _react.default.createElement("h2", null, "About"), _react.default.createElement("p", null, "This application replicates a few applications - the ", _react.default.createElement("a", {
+    href: "https://davidruvolo51.github.io/shinytutorials/tutorials/sass-in-shiny/"
+  }, "sass in shiny tutorial"), " and the ", _react.default.createElement("a", {
+    href: "https://davidruvolo51.github.io/shinytutorials/tutorials/responsive-tables/"
+  }, "responsive datatables tutorial"), ". This application uses Rplumber as a backend instead of shiny and uses react as the client.")), _react.default.createElement("section", {
+    className: "section",
+    id: "table_output"
+  }, _react.default.createElement("h2", null, "Generate Table"), _react.default.createElement("form", null, _react.default.createElement("label", null, "Select Records to Display"), _react.default.createElement("select", {
+    id: "limits",
+    name: "limits",
+    onChange: function onChange(e) {
+      return setSelection(e.target.value);
     }
-  }]);
-
-  return App;
-}(_react.Component); // render
+  }, _react.default.createElement("option", {
+    value: "5"
+  }, "5"), _react.default.createElement("option", {
+    value: "10"
+  }, "10"), _react.default.createElement("option", {
+    value: "15"
+  }, "15"), _react.default.createElement("option", {
+    value: "25"
+  }, "25"), _react.default.createElement("option", {
+    value: "50"
+  }, "50"), _react.default.createElement("option", {
+    value: "100"
+  }, "100"), _react.default.createElement("option", {
+    value: "150"
+  }, "150"), _react.default.createElement("option", {
+    value: "all"
+  }, "All"))), _react.default.createElement("div", {
+    dangerouslySetInnerHTML: {
+      __html: html
+    }
+  }))));
+} // render
 
 
 _reactDom.default.render(_react.default.createElement(App, null), document.getElementById("root"));
@@ -31970,7 +31944,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "54234" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49406" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
