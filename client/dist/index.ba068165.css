@@ -70,6 +70,7 @@ select {
 }
 
 .datatable {
+    font-family: Arial, Helvetica, sans-serif;
     width: 100%;
     border-spacing: 0;
     text-align: left;
@@ -80,7 +81,7 @@ select {
     text-align: left;
     font-size: 16pt;
     margin: 12px 0;
-    color: #2b2b2b;
+    color: #252525;
     font-weight: 600
 }
 
@@ -89,48 +90,68 @@ select {
     padding: 4px 12px;
     text-transform: uppercase;
     letter-spacing: 2px;
-    border-bottom: 1px solid #2b2b2b;
-    color: #2b2b2b
+    border-bottom: 1px solid #252525;
+    color: #252525
+}
+
+.datatable thead tr th[data-col-align=right] {
+    text-align: right
 }
 
 .datatable tbody tr td, .datatable tbody tr th {
     font-weight: 400;
-    padding: 24px 12px
+    padding: 16px 12px
 }
 
-.datatable tbody tr td .hidden-colname, .datatable tbody tr th .hidden-colname {
-    display: inline-block;
-    clip: rect(1px 1px 1px 1px);
-    clip: rect(1px, 1px, 1px, 1px);
-    width: 1px;
-    height: 1px;
-    overflow: hidden
+.datatable tbody tr td .hidden__colname, .datatable tbody tr th .hidden__colname {
+    display: none
 }
 
-.datatable.row-highlighting tbody tr:nth-child(2n) {
+.datatable tbody tr td[data-col-align=right], .datatable tbody tr th[data-col-align=right] {
+    text-align: right
+}
+
+.datatable.row__highlighting tbody tr:nth-child(2n) {
     background-color: #f6f6f6
 }
 
-@media (max-width:892px) {
-    .datatable thead {
+.datatable.caption__side__top caption {
+    caption-side: top
+}
+
+.datatable.caption__side__bottom caption {
+    caption-side: bottom
+}
+
+.datatable .datatable__responsive tbody tr td[data-col-align=right], .datatable .datatable__responsive tbody tr th[data-col-align=right], .datatable .datatable__responsive thead tr th[data-col-align=right] {
+    text-align: right
+}
+
+@media (max-width:812px) {
+    .datatable__responsive thead {
         position: absolute;
         clip: rect(1px 1px 1px 1px);
         clip: rect(1px, 1px, 1px, 1px);
         width: 1px;
         height: 1px;
-        overflow: hidden
+        overflow: hidden;
+        white-space: nowrap
     }
-    .datatable tbody tr td, .datatable tbody tr th {
-        display: block;
-        padding: 5px 0 5px 12px
+    .datatable__responsive tbody tr td, .datatable__responsive tbody tr th {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        padding: 4px 0 4px 12px
     }
-    .datatable tbody tr td .hidden-colname, .datatable tbody tr th .hidden-colname {
+    .datatable__responsive tbody tr td .hidden__colname, .datatable__responsive tbody tr th .hidden__colname {
         display: inline-block;
         clip: auto;
-        width: 150px;
-        height: auto;
-        line-height: 1
+        width: 50%;
+        height: 100%;
+        text-overflow: ellipsis
+    }
+    .datatable__responsive tbody tr td[data-col-align=right], .datatable__responsive tbody tr th[data-col-align=right] {
+        text-align: left
     }
 }
-
-/*# sourceMappingURL=/src.e31bb0bc.css.map */
+/*# sourceMappingURL=index.ba068165.css.map */

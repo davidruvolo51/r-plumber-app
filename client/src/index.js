@@ -31,7 +31,7 @@ function App() {
 
     // send request based on selection status
     useEffect(() => {
-        fetch("/data", {
+        fetch("http://localhost/data", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -73,8 +73,6 @@ function App() {
                             <option value="15">15</option>
                             <option value="25">25</option>
                             <option value="50">50</option>
-                            <option value="100">100</option>
-                            <option value="150">150</option>
                             <option value="all">All</option>
                         </select>
                     </form>
