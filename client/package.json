@@ -6,7 +6,7 @@
 	"author": "davidruvolo51",
 	"license": "MIT",
 	"scripts": {
-		"start": "NODE_ENV=development parcel src/index.html -d public/",
+		"start": "parcel serve src/index.html",
 		"clean": "rm -rf .cache/ public/"
 	},
 	"dependencies": {
@@ -19,5 +19,8 @@
 	},
 	"bugs": {
 		"url": "https://github.com/davidruvolo51/r-plumber-app/issues"
+	},
+	"devDependencies": {
+		"parcel": "^2.0.0-beta.1"
 	}
 }
