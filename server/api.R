@@ -2,23 +2,22 @@
 #' FILE: plumber.R
 #' AUTHOR: David Ruvolo
 #' CREATED: 2020-01-26
-#' MODIFIED: 2020-01-26
+#' MODIFIED: 2021-01-09
 #' PURPOSE: create APIs
 #' STATUS: working
 #' PACKAGES: plumber
 #' COMMENTS: NA
 #' ////////////////////////////////////////////////////////////////////////////
 
-# load pkg - via github: davidruvolo51/accessibleshiny
-suppressPackageStartupMessages(library(accessibleshiny))
-suppressPackageStartupMessages(library(dplyr))
+# source utils
+source("R/datatable.R")
 
 # load data
-df <- readRDS("server/data/birds_summary.RDS")
+df <- dplyr::starwars
 
-#' @get /data
-#' @post /data
-#' @json
+#* @get /data
+#* @post /data
+#* @serializer json
 function(req, value = 0) {
 
     # process request
@@ -31,15 +30,13 @@ function(req, value = 0) {
 
     # build html table
     tbl <- as.character(
-        accessibleshiny::datatable(
+        datatable(
             data = data,
-            id = "birds",
-            caption = "Reporting Rates of Australian Birds"
+            id = "starwars_data",
+            caption = "Starwars dataset from the `dplyr` package"
         )
     )
 
     # return
-    list(
-        html = tbl
-    )
+    list(html = tbl)
 }
