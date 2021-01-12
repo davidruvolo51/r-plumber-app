@@ -1,4 +1,4 @@
-#'////////////////////////////////////////////////////////////////////////////
+#' ////////////////////////////////////////////////////////////////////////////
 #' FILE: server.R
 #' AUTHOR: David Ruvolo
 #' CREATED: 2020-01-26
@@ -7,35 +7,60 @@
 #' STATUS: in.progress
 #' PACKAGES: plumber
 #' COMMENTS: NA
-#'////////////////////////////////////////////////////////////////////////////
+#' ////////////////////////////////////////////////////////////////////////////
 
-#' install
-#' install.packages(c("htmltools", "rlang", "plumber"))
+#' install pkgs
+#' install.packages(c("htmltools", "rlang", "plumber", "palmerpenguins"))
 
 #' pkgs
-suppressPackageStartupMessages(library(plumber))
+library(plumber)
+
+# source utils
+source("./server/datatable.R")
 
 #' create app
-app <- plumber::plumb("./server/api.R")
+app <- Plumber$new()
+
+#' mount client
 app$mount("/", PlumberStatic$new("./client/dist"))
 
-#' @filter cors
+
+#* @filter cors
 cors <- function(req, res) {
-
-  res$setHeader("Access-Control-Allow-Origin", "*")
-
-    if (req$REQUEST_METHOD == "OPTIONS") {
-        res$setHeader("Access-Control-Allow-Methods", "*")
-        res$setHeader(
-            "Access-Control-Allow-Headers",
-            req$HTTP_ACCESS_CONTROL_REQUEST_HEADERS
-        )
-        res$status <- 200
-        return(list())
-    } else {
-        plumber::forward()
-    }
+    res$setHeader("Access-Control-Allow-Origin", "*")
+    res$setHeader("Access-Control-Allow-Methods", "*")
+    res$setHeader("Access-Control-Allow-Headers", "Content-Type")
+    plumber::forward()
 }
+
+
+#' define endpoint: `/html`
+app$handle(
+    methods = "POST",
+    path = "/html",
+    handler = function(req, value = 0) {
+        val <- as.numeric(value)
+
+        if (val == 999) {
+            data <- palmerpenguins::penguins
+        } else {
+            data <- palmerpenguins::penguins[1:val, ]
+        }
+
+        # build html table
+        tbl <- as.character(
+            datatable(
+                data = data,
+                id = "starwars_data",
+                caption = "Penguins dataset from the `palmerpenguins` pkg"
+            )
+        )
+
+        # return
+        list(html = tbl)
+    }
+)
+
 
 #' start
 app$run(port = 8000)
