@@ -1184,7 +1184,7 @@ try {
 
 
     _react.useEffect(() => {
-      fetch("http://localhost/data", {
+      fetch("/html", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -1193,7 +1193,6 @@ try {
           value: selection
         })
       }).then(response => {
-        // process response
         if (response.ok) {
           return response.json();
         } else {
@@ -1213,14 +1212,14 @@ try {
       __self: this,
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 58,
+        lineNumber: 57,
         columnNumber: 13
       }
-    }, /*#__PURE__*/_reactDefault.default.createElement("h1", {
+    }, /*#__PURE__*/_reactDefault.default.createElement("p", {
       __self: this,
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 59,
+        lineNumber: 58,
         columnNumber: 17
       }
     }, "R Plumber")), /*#__PURE__*/_reactDefault.default.createElement("main", {
@@ -1228,7 +1227,7 @@ try {
       __self: this,
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 61,
+        lineNumber: 60,
         columnNumber: 13
       }
     }, /*#__PURE__*/_reactDefault.default.createElement("section", {
@@ -1236,67 +1235,75 @@ try {
       __self: this,
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 62,
+        lineNumber: 61,
         columnNumber: 17
       }
-    }, /*#__PURE__*/_reactDefault.default.createElement("h2", {
+    }, /*#__PURE__*/_reactDefault.default.createElement("h1", {
+      __self: this,
+      __source: {
+        fileName: _jsxFileName,
+        lineNumber: 62,
+        columnNumber: 21
+      }
+    }, "R Plumber Example"), /*#__PURE__*/_reactDefault.default.createElement("p", {
       __self: this,
       __source: {
         fileName: _jsxFileName,
         lineNumber: 63,
         columnNumber: 21
       }
-    }, "About"), /*#__PURE__*/_reactDefault.default.createElement("p", {
+    }, "This application demonstrates how to integrate React and R using the Plumber package. This example app also builds on other tutorials and examples in the ", /*#__PURE__*/_reactDefault.default.createElement("a", {
+      href: "https://github.com/davidruvolo51/shinyAppTutorials",
       __self: this,
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 64,
-        columnNumber: 21
+        lineNumber: 63,
+        columnNumber: 178
       }
-    }, "This application replicates a few applications - the ", /*#__PURE__*/_reactDefault.default.createElement("a", {
-      href: "https://davidruvolo51.github.io/shinytutorials/tutorials/sass-in-shiny/",
+    }, "shinyAppTutorials"), " project. In the following section, select how many rows you would like to display from the ", /*#__PURE__*/_reactDefault.default.createElement("a", {
+      href: "https://github.com/allisonhorst/palmerpenguins",
       __self: this,
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 64,
-        columnNumber: 77
+        lineNumber: 63,
+        columnNumber: 352
       }
-    }, "sass in shiny tutorial"), " and the ", /*#__PURE__*/_reactDefault.default.createElement("a", {
-      href: "https://davidruvolo51.github.io/shinytutorials/tutorials/responsive-tables/",
+    }, "palmerpenguins"), " dataset. The response is a html generated table as described in the ", /*#__PURE__*/_reactDefault.default.createElement("a", {
+      href: "https://github.com/davidruvolo51/shinyAppTutorials/tree/main/responsive-datatables",
       __self: this,
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 64,
-        columnNumber: 194
+        lineNumber: 63,
+        columnNumber: 496
       }
-    }, "responsive datatables tutorial"), ". This application uses Rplumber as a backend instead of shiny and uses react as the client.")), /*#__PURE__*/_reactDefault.default.createElement("section", {
+    }, "responsive datatable example"))), /*#__PURE__*/_reactDefault.default.createElement("section", {
       className: "section",
       id: "table_output",
       __self: this,
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 66,
+        lineNumber: 65,
         columnNumber: 17
       }
     }, /*#__PURE__*/_reactDefault.default.createElement("h2", {
       __self: this,
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 67,
+        lineNumber: 66,
         columnNumber: 21
       }
     }, "Generate Table"), /*#__PURE__*/_reactDefault.default.createElement("form", {
       __self: this,
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 68,
+        lineNumber: 67,
         columnNumber: 21
       }
     }, /*#__PURE__*/_reactDefault.default.createElement("label", {
       __self: this,
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 69,
+        lineNumber: 68,
         columnNumber: 25
       }
     }, "Select Records to Display"), /*#__PURE__*/_reactDefault.default.createElement("select", {
@@ -1306,7 +1313,7 @@ try {
       __self: this,
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 70,
+        lineNumber: 69,
         columnNumber: 25
       }
     }, /*#__PURE__*/_reactDefault.default.createElement("option", {
@@ -1314,7 +1321,7 @@ try {
       __self: this,
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 71,
+        lineNumber: 70,
         columnNumber: 29
       }
     }, "5"), /*#__PURE__*/_reactDefault.default.createElement("option", {
@@ -1322,7 +1329,7 @@ try {
       __self: this,
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 72,
+        lineNumber: 71,
         columnNumber: 29
       }
     }, "10"), /*#__PURE__*/_reactDefault.default.createElement("option", {
@@ -1330,7 +1337,7 @@ try {
       __self: this,
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 73,
+        lineNumber: 72,
         columnNumber: 29
       }
     }, "15"), /*#__PURE__*/_reactDefault.default.createElement("option", {
@@ -1338,7 +1345,7 @@ try {
       __self: this,
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 74,
+        lineNumber: 73,
         columnNumber: 29
       }
     }, "25"), /*#__PURE__*/_reactDefault.default.createElement("option", {
@@ -1346,18 +1353,18 @@ try {
       __self: this,
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 75,
+        lineNumber: 74,
         columnNumber: 29
       }
     }, "50"), /*#__PURE__*/_reactDefault.default.createElement("option", {
-      value: "all",
+      value: "100",
       __self: this,
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 76,
+        lineNumber: 75,
         columnNumber: 29
       }
-    }, "All"))), /*#__PURE__*/_reactDefault.default.createElement("div", {
+    }, "100"))), /*#__PURE__*/_reactDefault.default.createElement("div", {
       dangerouslySetInnerHTML: {
         __html: html
       },

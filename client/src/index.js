@@ -31,14 +31,13 @@ function App() {
 
     // send request based on selection status
     useEffect(() => {
-        fetch("http://localhost/data", {
+        fetch("/html", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({ value: selection })
         }).then(response => {
-            // process response
             if (response.ok) {
                 return response.json();
             } else {
@@ -56,12 +55,12 @@ function App() {
     return (
         <>
             <header className="header">
-                <h1>R Plumber</h1>
+                <p>R Plumber</p>
             </header>
             <main className="main">
                 <section className="section">
-                    <h2>About</h2>
-                    <p>This application replicates a few applications - the <a href="https://davidruvolo51.github.io/shinytutorials/tutorials/sass-in-shiny/">sass in shiny tutorial</a> and the <a href="https://davidruvolo51.github.io/shinytutorials/tutorials/responsive-tables/">responsive datatables tutorial</a>. This application uses Rplumber as a backend instead of shiny and uses react as the client.</p>
+                    <h1>R Plumber Example</h1>
+                    <p>This application demonstrates how to integrate React and R using the Plumber package. This example app also builds on other tutorials and examples in the <a href="https://github.com/davidruvolo51/shinyAppTutorials">shinyAppTutorials</a> project. In the following section, select how many rows you would like to display from the <a href="https://github.com/allisonhorst/palmerpenguins">palmerpenguins</a> dataset. The response is a html generated table as described in the <a href="https://github.com/davidruvolo51/shinyAppTutorials/tree/main/responsive-datatables">responsive datatable example</a></p>
                 </section>
                 <section className="section" id="table_output">
                     <h2>Generate Table</h2>
@@ -73,7 +72,8 @@ function App() {
                             <option value="15">15</option>
                             <option value="25">25</option>
                             <option value="50">50</option>
-                            <option value="all">All</option>
+                            <option value="100">100</option>
+                            {/* <option value="999">All</option> */}
                         </select>
                     </form>
                     <div dangerouslySetInnerHTML={{__html: html}} />

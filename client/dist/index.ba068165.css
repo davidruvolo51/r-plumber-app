@@ -56,7 +56,7 @@ select {
     background-color: #353535;
 }
 
-.header h1 {
+.header p {
     font-size: 14pt;
     color: #f6f6f6;
     margin: 0;
@@ -65,6 +65,7 @@ select {
 
 .section {
     width: 90%;
+    box-sizing: content-box;
     padding: 1em 0;
     margin: 0 auto;
 }

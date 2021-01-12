@@ -1,0 +1,157 @@
+html, body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-size: 16pt;
+    padding: 0;
+    margin: 0;
+}
+
+main {
+    padding-bottom: 32px;
+}
+
+h1, h2, h3 {
+    padding: 0;
+    margin: 0;
+    margin-bottom: 6px;
+    line-height: 1.4;
+    color: #353535;
+}
+
+p {
+    padding: 0;
+    margin: 0;
+    margin-bottom: 12px;
+    color: #3f454b;
+    line-height: 1.6;
+}
+
+a {
+    text-decoration: none;
+    color: #5177b8;
+    -webkit-box-shadow: inset 0 -2px 0 0 #5177b8;
+    box-shadow: inset 0 -2px 0 0 #5177b8;
+}
+
+code {
+    background-color: #f6f6f6;
+    font-weight: bold;
+    padding: 4px 2px;
+}
+
+form label {
+    display: block;
+}
+
+select {
+    display: block;
+    width: 150px;
+    font-size: 12pt;
+    padding: 4px 6px;
+}
+
+.header {
+    display: block;
+    width: 100%;
+    padding: 12px 0;
+    background-color: #353535;
+}
+
+.header p {
+    font-size: 14pt;
+    color: #f6f6f6;
+    margin: 0;
+    margin-left: 32px;
+}
+
+.section {
+    width: 90%;
+    padding: 1em 0;
+    margin: 0 auto;
+}
+
+.datatable {
+    font-family: Arial, Helvetica, sans-serif;
+    width: 100%;
+    border-spacing: 0;
+    text-align: left;
+    font-size: 13pt
+}
+
+.datatable caption {
+    text-align: left;
+    font-size: 16pt;
+    margin: 12px 0;
+    color: #252525;
+    font-weight: 600
+}
+
+.datatable thead tr th {
+    font-weight: 600;
+    padding: 4px 12px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    border-bottom: 1px solid #252525;
+    color: #252525
+}
+
+.datatable thead tr th[data-col-align=right] {
+    text-align: right
+}
+
+.datatable tbody tr td, .datatable tbody tr th {
+    font-weight: 400;
+    padding: 16px 12px
+}
+
+.datatable tbody tr td .hidden__colname, .datatable tbody tr th .hidden__colname {
+    display: none
+}
+
+.datatable tbody tr td[data-col-align=right], .datatable tbody tr th[data-col-align=right] {
+    text-align: right
+}
+
+.datatable.row__highlighting tbody tr:nth-child(2n) {
+    background-color: #f6f6f6
+}
+
+.datatable.caption__side__top caption {
+    caption-side: top
+}
+
+.datatable.caption__side__bottom caption {
+    caption-side: bottom
+}
+
+.datatable .datatable__responsive tbody tr td[data-col-align=right], .datatable .datatable__responsive tbody tr th[data-col-align=right], .datatable .datatable__responsive thead tr th[data-col-align=right] {
+    text-align: right
+}
+
+@media (max-width:812px) {
+    .datatable__responsive thead {
+        position: absolute;
+        clip: rect(1px 1px 1px 1px);
+        clip: rect(1px, 1px, 1px, 1px);
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        white-space: nowrap
+    }
+    .datatable__responsive tbody tr td, .datatable__responsive tbody tr th {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        padding: 4px 0 4px 12px
+    }
+    .datatable__responsive tbody tr td .hidden__colname, .datatable__responsive tbody tr th .hidden__colname {
+        display: inline-block;
+        clip: auto;
+        width: 50%;
+        height: 100%;
+        text-overflow: ellipsis
+    }
+    .datatable__responsive tbody tr td[data-col-align=right], .datatable__responsive tbody tr th[data-col-align=right] {
+        text-align: left
+    }
+}
+/*# sourceMappingURL=index.HASH_REF_05187bde812ae77161bff670ba068165.css.map */
