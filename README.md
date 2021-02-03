@@ -1,47 +1,77 @@
-# R Plumber Application with a React Frontend
+# R Plumber ❤️ React
 
-This repo provides a demo for creating interactive web applications using R plumber. This app replicates the [responsive datatables](https://davidruvolo51.github.io/shinytutorials/tutorials/responsive-tables/) tutorial using plumber for the backend and a react frontend.
+![r plumber demo](r-plumber-demo.png)
 
-## About
+The `r-plumber-react` app demonstrates how to create a React application that uses R plumber as a backen. This app replicates the [responsive datatables](https://davidruvolo51.github.io/shinytutorials/tutorials/responsive-tables/) tutorial. This application uses following tools.
 
-There are a few key files that are used in this application.
+- Backend
+    - R Plumber: [https://www.rplumber.io](https://www.rplumber.io)
+    - Node: [https://nodejs.org/](https://nodejs.org/)
+- Frontend
+    - React: [https://reactjs.org](https://reactjs.org)
+    - ParcelJS: [https://parceljs.org](https://parceljs.org)
 
-- `server.R`: creates a new app (via plumber)
-- `server/api.R`: defines the api `/data`
-- `client/src/index.js`: client-side processesing of the request and response, as well as rendering the client
+## Getting Started
 
-On the server side, the main file is `server.R`, this file creates a new app based on configurations in the file `server/api.R`. The server file also mounts static resources in `/client` (via `app$mount(...)`). In the file `api.R` creates an api `/data` which serves as a mechanism for rendering html tables server-side based on client-side variables. The api `/data` uses the variable `value` sent from the client. `value` is the number of rows to select from the sample dataset. This returns the a data table generated using the function defined in the [accessibleshiny](https://github.com/davidruvolo51/accessibleshiny)(in progress). The api returns a character string of the html structure of the datatable. In the `index.js` file, the function `updateTable()` processes the POST request and uses `insertAdjacentHTML` to render the table in the page.
+### 1. Install the dev dependencies
 
-## Tools Required
+Make sure [Node and NPM](https://nodejs.org/en/) are installed on your machine. You may also use [Yarn](https://yarnpkg.com/en/). To test the installation or to see if these tools are already installed on your machine, run the following commands in the terminal.
 
-This application uses following technologies.
-
-- **Backend**: R Plumber
-- **Frontend**: React
-
-In addition, the following dev tools are used and required to run the app.
-
-
-- [Nodejs and npm](https://nodejs.org/)
-- [Parcel.js](https://parceljs.org)
-- [yarn](https://legacy.yarnpkg.com/lang/en/docs/install/)
-
-You can check the installation of all of the tools by running the following commands (this returns the version numbers).
-
-```bash
+```shell
 node -v
 npm -v
-yarn -v
 ```
 
-## Usage
+### 2. Clone the `r-plumber-app` repository
 
-Yarn isn't necssary, but I prefer it over npm for starting the dev server (In this project anyways). Start the dev server using yarn or npm.
+```shell
+git clone https://github.com/davidruvolo51/r-plumber-app
+```
+
+### 3. Install dependencies
+
+Next, install the npm packages that are required to run the app locally. I have decided to use [pnpm](https://github.com/pnpm/pnpm) to manage packages on my machine and across projects. To install `pnpm`, run the following command.
+
+```shell
+npm install -g pnpm
+```
+
+You will need to install the dependencies in the root directory and in the `client/` directory.
+
+```shell
+pnpm install
+
+cd client
+pnpm install
+```
+
+If you prefer to use `npm`, use the following.
+
+```shell
+npm install
+
+cd client
+npm install
+```
+
+### 4. Install the required R packages
+
+This application uses the following R packages
+
+```r
+install.packages(c("htmltools", "rlang", "plumber", "palmerpenguins"))
+```
+
+### 5. Start the development servers
+
+When you have installed everything, navigate back to the main directory and start the development server.
 
 ```bash
+# if using npm
+npm run dev
+
+# if using yarn
 yarn dev
 ```
 
-The app will be available at `localhost:8000`.
-
-From here, you can continue developing the client and create new apis. If you have any questions, feel free to open a new issue.
+This will start Plumber API and parcel. The client will be hosted at `localhost:8000`.
