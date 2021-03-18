@@ -10,8 +10,8 @@
 		"clean": "rm -rf .cache/ public/"
 	},
 	"dependencies": {
-		"react": "^16.12.0",
-		"react-dom": "^16.12.0"
+		"react": "^16.14.0",
+		"react-dom": "^16.14.0"
 	},
 	"repository": {
 		"type": "git",
@@ -21,7 +21,7 @@
 		"url": "https://github.com/davidruvolo51/r-plumber-app/issues"
 	},
 	"devDependencies": {
-		"@babel/core": "^7.0.0",
-		"parcel": "^2.0.0-beta.1"
+		"@babel/core": "^7.13.10",
+		"parcel": "^2.0.0-beta.2"
 	}
 }
