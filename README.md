@@ -56,10 +56,10 @@ npm install
 
 ### 4. Install the required R packages
 
-This application uses the following R packages
+This application uses [renv](https://github.com/rstudio/renv) to manage R packages. Make sure `renv` is installed and restore the library.
 
 ```r
-install.packages(c("htmltools", "rlang", "plumber", "palmerpenguins"))
+renv::restore()
 ```
 
 ### 5. Start the development servers
