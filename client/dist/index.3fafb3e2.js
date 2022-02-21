@@ -740,88 +740,111 @@ if ("development" !== "production") {
   })();
 }
 
-},{}],"7sNyx":[function(require,module,exports) {
-var HMR_HOST = null;var HMR_PORT = 1234;var HMR_SECURE = false;var HMR_ENV_HASH = "d751713988987e9331980363e24189ce";module.bundle.HMR_BUNDLE_ID = "0fa2489aa94c8731ee2aee9f3fafb3e2";/* global HMR_HOST, HMR_PORT, HMR_ENV_HASH, HMR_SECURE */
-
+},{}],"3Imd1":[function(require,module,exports) {
+var HMR_HOST = null;
+var HMR_PORT = 1234;
+var HMR_SECURE = false;
+var HMR_ENV_HASH = "d751713988987e9331980363e24189ce";
+module.bundle.HMR_BUNDLE_ID = "0fa2489aa94c8731ee2aee9f3fafb3e2";
+// @flow
+/*global HMR_HOST, HMR_PORT, HMR_ENV_HASH, HMR_SECURE*/
+/*::
+import type {
+HMRAsset,
+HMRMessage,
+} from '@parcel/reporter-dev-server/src/HMRServer.js';
+interface ParcelRequire {
+(string): mixed;
+cache: {|[string]: ParcelModule|};
+hotData: mixed;
+Module: any;
+parent: ?ParcelRequire;
+isParcelRequire: true;
+modules: {|[string]: [Function, {|[string]: string|}]|};
+HMR_BUNDLE_ID: string;
+root: ParcelRequire;
+}
+interface ParcelModule {
+hot: {|
+data: mixed,
+accept(cb: (Function) => void): void,
+dispose(cb: (mixed) => void): void,
+// accept(deps: Array<string> | string, cb: (Function) => void): void,
+// decline(): void,
+_acceptCallbacks: Array<(Function) => void>,
+_disposeCallbacks: Array<(mixed) => void>,
+|};
+}
+declare var module: {bundle: ParcelRequire, ...};
+declare var HMR_HOST: string;
+declare var HMR_PORT: string;
+declare var HMR_ENV_HASH: string;
+declare var HMR_SECURE: boolean;
+*/
 var OVERLAY_ID = '__parcel__error__overlay__';
-
 var OldModule = module.bundle.Module;
-
 function Module(moduleName) {
   OldModule.call(this, moduleName);
   this.hot = {
     data: module.bundle.hotData,
     _acceptCallbacks: [],
     _disposeCallbacks: [],
-    accept: function(fn) {
-      this._acceptCallbacks.push(fn || function() {});
+    accept: function (fn) {
+      this._acceptCallbacks.push(fn || (function () {}));
     },
-    dispose: function(fn) {
+    dispose: function (fn) {
       this._disposeCallbacks.push(fn);
-    },
+    }
   };
-
-  module.bundle.hotData = null;
+  module.bundle.hotData = undefined;
 }
-
 module.bundle.Module = Module;
-var checkedAssets, assetsToAccept, acceptedAssets;
-
+var checkedAssets, /*: {|[string]: boolean|}*/
+acceptedAssets, /*: {|[string]: boolean|}*/
+/*: {|[string]: boolean|}*/
+assetsToAccept;
 function getHostname() {
-  return (
-    HMR_HOST ||
-    (location.protocol.indexOf('http') === 0 ? location.hostname : 'localhost')
-  );
+  return HMR_HOST || (location.protocol.indexOf('http') === 0 ? location.hostname : 'localhost');
 }
-
 function getPort() {
   return HMR_PORT || location.port;
 }
-
 // eslint-disable-next-line no-redeclare
 var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = getHostname();
   var port = getPort();
-  var protocol =
-    HMR_SECURE ||
-    (location.protocol == 'https:' &&
-      !/localhost|127.0.0.1|0.0.0.0/.test(hostname))
-      ? 'wss'
-      : 'ws';
-  var ws = new WebSocket(
-    protocol + '://' + hostname + (port ? ':' + port : '') + '/',
-  );
-  ws.onmessage = function(event) {
-    checkedAssets = {};
+  var protocol = HMR_SECURE || location.protocol == 'https:' && !(/localhost|127.0.0.1|0.0.0.0/).test(hostname) ? 'wss' : 'ws';
+  var ws = new WebSocket(protocol + '://' + hostname + (port ? ':' + port : '') + '/');
+  // $FlowFixMe
+  ws.onmessage = function (event) /*: {data: string, ...}*/
+  {
+    checkedAssets = {
+      /*: {|[string]: boolean|}*/
+    };
+    acceptedAssets = {
+      /*: {|[string]: boolean|}*/
+    };
     assetsToAccept = [];
-    acceptedAssets = {};
-
-    var data = JSON.parse(event.data);
-
+    var data = /*: HMRMessage*/
+    JSON.parse(event.data);
     if (data.type === 'update') {
       // Remove error overlay if there is one
       removeErrorOverlay();
-
       let assets = data.assets.filter(asset => asset.envHash === HMR_ENV_HASH);
-
       // Handle HMR Update
       var handled = false;
       assets.forEach(asset => {
-        var didAccept =
-          asset.type === 'css' || hmrAcceptCheck(module.bundle.root, asset.id);
+        var didAccept = asset.type === 'css' || asset.type === 'js' && hmrAcceptCheck(module.bundle.root, asset.id, asset.depsByBundle);
         if (didAccept) {
           handled = true;
         }
       });
-
       if (handled) {
         console.clear();
-
-        assets.forEach(function(asset) {
+        assets.forEach(function (asset) {
           hmrApply(module.bundle.root, asset);
         });
-
         for (var i = 0; i < assetsToAccept.length; i++) {
           var id = assetsToAccept[i][1];
           if (!acceptedAssets[id]) {
@@ -832,38 +855,28 @@ if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
         window.location.reload();
       }
     }
-
     if (data.type === 'error') {
       // Log parcel errors to console
       for (let ansiDiagnostic of data.diagnostics.ansi) {
-        let stack = ansiDiagnostic.codeframe
-          ? ansiDiagnostic.codeframe
-          : ansiDiagnostic.stack;
-
-        console.error(
-          '🚨 [parcel]: ' +
-            ansiDiagnostic.message +
-            '\n' +
-            stack +
-            '\n\n' +
-            ansiDiagnostic.hints.join('\n'),
-        );
+        let stack = ansiDiagnostic.codeframe ? ansiDiagnostic.codeframe : ansiDiagnostic.stack;
+        console.error('🚨 [parcel]: ' + ansiDiagnostic.message + '\n' + stack + '\n\n' + ansiDiagnostic.hints.join('\n'));
       }
-
       // Render the fancy html overlay
       removeErrorOverlay();
       var overlay = createErrorOverlay(data.diagnostics.html);
+      // $FlowFixMe
       document.body.appendChild(overlay);
     }
   };
-  ws.onerror = function(e) {
+  ws.onerror = function (e) {
     console.error(e.message);
   };
-  ws.onclose = function(e) {
-    console.warn('[parcel] 🚨 Connection to the HMR server was lost');
+  ws.onclose = function (e) {
+    if (undefined !== 'test') {
+      console.warn('[parcel] 🚨 Connection to the HMR server was lost');
+    }
   };
 }
-
 function removeErrorOverlay() {
   var overlay = document.getElementById(OVERLAY_ID);
   if (overlay) {
@@ -871,17 +884,12 @@ function removeErrorOverlay() {
     console.log('[parcel] ✨ Error resolved');
   }
 }
-
 function createErrorOverlay(diagnostics) {
   var overlay = document.createElement('div');
   overlay.id = OVERLAY_ID;
-
-  let errorHTML =
-    '<div style="background: black; opacity: 0.85; font-size: 16px; color: white; position: fixed; height: 100%; width: 100%; top: 0px; left: 0px; padding: 30px; font-family: Menlo, Consolas, monospace; z-index: 9999;">';
-
+  let errorHTML = '<div style="background: black; opacity: 0.85; font-size: 16px; color: white; position: fixed; height: 100%; width: 100%; top: 0px; left: 0px; padding: 30px; font-family: Menlo, Consolas, monospace; z-index: 9999;">';
   for (let diagnostic of diagnostics) {
     let stack = diagnostic.codeframe ? diagnostic.codeframe : diagnostic.stack;
-
     errorHTML += `
       <div>
         <div style="font-size: 18px; font-weight: bold; margin-top: 20px;">
@@ -896,152 +904,133 @@ function createErrorOverlay(diagnostics) {
       </div>
     `;
   }
-
   errorHTML += '</div>';
-
   overlay.innerHTML = errorHTML;
-
   return overlay;
 }
-
-function getParents(bundle, id) {
+function getParents(bundle, id) /*: Array<[ParcelRequire, string]>*/
+{
   var modules = bundle.modules;
   if (!modules) {
     return [];
   }
-
   var parents = [];
   var k, d, dep;
-
   for (k in modules) {
     for (d in modules[k][1]) {
       dep = modules[k][1][d];
-
-      if (dep === id || (Array.isArray(dep) && dep[dep.length - 1] === id)) {
+      if (dep === id || Array.isArray(dep) && dep[dep.length - 1] === id) {
         parents.push([bundle, k]);
       }
     }
   }
-
   if (bundle.parent) {
     parents = parents.concat(getParents(bundle.parent, id));
   }
-
   return parents;
 }
-
 function updateLink(link) {
   var newLink = link.cloneNode();
-  newLink.onload = function() {
+  newLink.onload = function () {
     if (link.parentNode !== null) {
+      // $FlowFixMe
       link.parentNode.removeChild(link);
     }
   };
-  newLink.setAttribute(
-    'href',
-    link.getAttribute('href').split('?')[0] + '?' + Date.now(),
-  );
+  newLink.setAttribute('href', // $FlowFixMe
+  link.getAttribute('href').split('?')[0] + '?' + Date.now());
+  // $FlowFixMe
   link.parentNode.insertBefore(newLink, link.nextSibling);
 }
-
 var cssTimeout = null;
 function reloadCSS() {
   if (cssTimeout) {
     return;
   }
-
-  cssTimeout = setTimeout(function() {
+  cssTimeout = setTimeout(function () {
     var links = document.querySelectorAll('link[rel="stylesheet"]');
     for (var i = 0; i < links.length; i++) {
-      var href = links[i].getAttribute('href');
+      // $FlowFixMe[incompatible-type]
+      var href = /*: string*/
+      links[i].getAttribute('href');
       var hostname = getHostname();
-      var servedFromHMRServer =
-        hostname === 'localhost'
-          ? new RegExp(
-              '^(https?:\\/\\/(0.0.0.0|127.0.0.1)|localhost):' + getPort(),
-            ).test(href)
-          : href.indexOf(hostname + ':' + getPort());
-      var absolute =
-        /^https?:\/\//i.test(href) &&
-        href.indexOf(window.location.origin) !== 0 &&
-        !servedFromHMRServer;
+      var servedFromHMRServer = hostname === 'localhost' ? new RegExp('^(https?:\\/\\/(0.0.0.0|127.0.0.1)|localhost):' + getPort()).test(href) : href.indexOf(hostname + ':' + getPort());
+      var absolute = (/^https?:\/\//i).test(href) && href.indexOf(window.location.origin) !== 0 && !servedFromHMRServer;
       if (!absolute) {
         updateLink(links[i]);
       }
     }
-
     cssTimeout = null;
   }, 50);
 }
-
-function hmrApply(bundle, asset) {
+function hmrApply(bundle, /*: ParcelRequire*/
+asset) /*:  HMRAsset*/
+{
   var modules = bundle.modules;
   if (!modules) {
     return;
   }
-
-  if (modules[asset.id] || !bundle.parent) {
-    if (asset.type === 'css') {
-      reloadCSS();
-    } else {
-      var fn = new Function('require', 'module', 'exports', asset.output);
-      modules[asset.id] = [fn, asset.depsByBundle[bundle.HMR_BUNDLE_ID]];
-    }
+  if (asset.type === 'css') {
+    reloadCSS();
+    return;
+  }
+  let deps = asset.depsByBundle[bundle.HMR_BUNDLE_ID];
+  if (deps) {
+    var fn = new Function('require', 'module', 'exports', asset.output);
+    modules[asset.id] = [fn, deps];
   } else if (bundle.parent) {
     hmrApply(bundle.parent, asset);
   }
 }
-
-function hmrAcceptCheck(bundle, id) {
+function hmrAcceptCheck(bundle, /*: ParcelRequire*/
+id, /*: ParcelRequire*/
+/*: string*/
+depsByBundle) /*: ?{ [string]: { [string]: string } }*/
+{
   var modules = bundle.modules;
-
   if (!modules) {
     return;
   }
-
-  if (!modules[id] && bundle.parent) {
-    return hmrAcceptCheck(bundle.parent, id);
+  if (depsByBundle && !depsByBundle[bundle.HMR_BUNDLE_ID]) {
+    // If we reached the root bundle without finding where the asset should go,
+    // there's nothing to do. Mark as "accepted" so we don't reload the page.
+    if (!bundle.parent) {
+      return true;
+    }
+    return hmrAcceptCheck(bundle.parent, id, depsByBundle);
   }
-
   if (checkedAssets[id]) {
     return;
   }
-
   checkedAssets[id] = true;
-
   var cached = bundle.cache[id];
-
   assetsToAccept.push([bundle, id]);
-
   if (cached && cached.hot && cached.hot._acceptCallbacks.length) {
     return true;
   }
-
-  return getParents(module.bundle.root, id).some(function(v) {
-    return hmrAcceptCheck(v[0], v[1]);
+  return getParents(module.bundle.root, id).some(function (v) {
+    return hmrAcceptCheck(v[0], v[1], null);
   });
 }
-
-function hmrAcceptRun(bundle, id) {
+function hmrAcceptRun(bundle, /*: ParcelRequire*/
+id) /*: string*/
+{
   var cached = bundle.cache[id];
   bundle.hotData = {};
   if (cached && cached.hot) {
     cached.hot.data = bundle.hotData;
   }
-
   if (cached && cached.hot && cached.hot._disposeCallbacks.length) {
-    cached.hot._disposeCallbacks.forEach(function(cb) {
+    cached.hot._disposeCallbacks.forEach(function (cb) {
       cb(bundle.hotData);
     });
   }
-
   delete bundle.cache[id];
   bundle(id);
-
   cached = bundle.cache[id];
   if (cached && cached.hot && cached.hot._acceptCallbacks.length) {
-    cached.hot._acceptCallbacks.forEach(function(cb) {
-      var assetsToAlsoAccept = cb(function() {
+    cached.hot._acceptCallbacks.forEach(function (cb) {
+      var assetsToAlsoAccept = cb(function () {
         return getParents(module.bundle.root, id);
       });
       if (assetsToAlsoAccept && assetsToAccept.length) {
@@ -1053,7 +1042,7 @@ function hmrAcceptRun(bundle, id) {
 }
 
 },{}],"5rkFb":[function(require,module,exports) {
-var helpers = require("../node_modules/.pnpm/@parcel/transformer-react-refresh-wrap@2.0.0-nightly.568_@parcel+core@2.0.0-nightly.566/node_modules/@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
+var helpers = require("../node_modules/.pnpm/@parcel/transformer-react-refresh-wrap@2.0.0-beta.2/node_modules/@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js");
 var prevRefreshReg = window.$RefreshReg$;
 var prevRefreshSig = window.$RefreshSig$;
 helpers.prelude(module);
@@ -1290,7 +1279,7 @@ try {
   window.$RefreshSig$ = prevRefreshSig;
 }
 
-},{"react":"3b2NM","react-dom":"2sg1U","./styles.css":"1jUZz","@parcel/transformer-js/lib/esmodule-helpers.js":"6gclC","../node_modules/.pnpm/@parcel/transformer-react-refresh-wrap@2.0.0-nightly.568_@parcel+core@2.0.0-nightly.566/node_modules/@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"4ZIw9"}],"3b2NM":[function(require,module,exports) {
+},{"react":"10gzA","react-dom":"38oFy","./styles.css":"1jUZz","@parcel/transformer-js/lib/esmodule-helpers.js":"5Hppv","../node_modules/.pnpm/@parcel/transformer-react-refresh-wrap@2.0.0-beta.2/node_modules/@parcel/transformer-react-refresh-wrap/lib/helpers/helpers.js":"munH3"}],"10gzA":[function(require,module,exports) {
 "use strict";
 if ("development" === 'production') {
   module.exports = require('./cjs/react.production.min.js');
@@ -1298,7 +1287,7 @@ if ("development" === 'production') {
   module.exports = require('./cjs/react.development.js');
 }
 
-},{"./cjs/react.development.js":"ixJ97"}],"ixJ97":[function(require,module,exports) {
+},{"./cjs/react.development.js":"3JMNL"}],"3JMNL":[function(require,module,exports) {
 /** @license React v16.14.0
 * react.development.js
 *
@@ -1517,10 +1506,10 @@ if ("development" !== "production") {
         // TODO: remove in React 17.0.
         ReactComponentTreeHook: {}
       });
-          /*by calls to these methods by a Babel plugin.*/
-      /**/
-      /*In PROD (or in packages without access to React internals),*/
-      /*they are left as they are instead.*/
+          // by calls to these methods by a Babel plugin.
+      // 
+      // In PROD (or in packages without access to React internals),
+      // they are left as they are instead.
 }
     // by calls to these methods by a Babel plugin.
     // 
@@ -2928,7 +2917,7 @@ if ("development" !== "production") {
   })();
 }
 
-},{"object-assign":"3eM6x","prop-types/checkPropTypes":"R8SC7"}],"3eM6x":[function(require,module,exports) {
+},{"object-assign":"59hdi","prop-types/checkPropTypes":"2Q34F"}],"59hdi":[function(require,module,exports) {
 /*
 object-assign
 (c) Sindre Sorhus
@@ -3020,7 +3009,7 @@ module.exports = shouldUseNative() ? Object.assign : function (target, source) {
 	return to;
 };
 
-},{}],"R8SC7":[function(require,module,exports) {
+},{}],"2Q34F":[function(require,module,exports) {
 /**
 * Copyright (c) 2013-present, Facebook, Inc.
 *
@@ -3103,7 +3092,7 @@ checkPropTypes.resetWarningCache = function () {
 };
 module.exports = checkPropTypes;
 
-},{"./lib/ReactPropTypesSecret":"3OVnw"}],"3OVnw":[function(require,module,exports) {
+},{"./lib/ReactPropTypesSecret":"2nqW1"}],"2nqW1":[function(require,module,exports) {
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
  *
@@ -3117,7 +3106,7 @@ var ReactPropTypesSecret = 'SECRET_DO_NOT_PASS_THIS_OR_YOU_WILL_BE_FIRED';
 
 module.exports = ReactPropTypesSecret;
 
-},{}],"2sg1U":[function(require,module,exports) {
+},{}],"38oFy":[function(require,module,exports) {
 "use strict";
 function checkDCE() {
   /*global __REACT_DEVTOOLS_GLOBAL_HOOK__*/
@@ -3152,7 +3141,7 @@ if ("development" === 'production') {
   module.exports = require('./cjs/react-dom.development.js');
 }
 
-},{"./cjs/react-dom.development.js":"6fSaM"}],"6fSaM":[function(require,module,exports) {
+},{"./cjs/react-dom.development.js":"45eLv"}],"45eLv":[function(require,module,exports) {
 /** @license React v16.14.0
 * react-dom.development.js
 *
@@ -4146,14 +4135,14 @@ if ("development" !== "production") {
     var ReactDebugCurrentFrame = null;
     {
       ReactDebugCurrentFrame = ReactSharedInternals.ReactDebugCurrentFrame;
-          /*A javascript: URL can contain leading C0 control or \u0020 SPACE,*/
-      /*and any newline or tab are filtered out as if they're not part of the URL.*/
-      /*https://url.spec.whatwg.org/#url-parsing*/
-      /*Tab or newline are defined as \r\n\t:*/
-      /*https://infra.spec.whatwg.org/#ascii-tab-or-newline*/
-      /*A C0 control is a code point in the range \u0000 NULL to \u001F*/
-      /*INFORMATION SEPARATOR ONE, inclusive:*/
-      /*https://infra.spec.whatwg.org/#c0-control-or-space*/
+          // A javascript: URL can contain leading C0 control or \u0020 SPACE,
+      // and any newline or tab are filtered out as if they're not part of the URL.
+      // https://url.spec.whatwg.org/#url-parsing
+      // Tab or newline are defined as \r\n\t:
+      // https://infra.spec.whatwg.org/#ascii-tab-or-newline
+      // A C0 control is a code point in the range \u0000 NULL to \u001F
+      // INFORMATION SEPARATOR ONE, inclusive:
+      // https://infra.spec.whatwg.org/#c0-control-or-space
       /*eslint-disable max-len*/
 }
     // A javascript: URL can contain leading C0 control or \u0020 SPACE,
@@ -6785,7 +6774,7 @@ if ("development" !== "production") {
       }
       {
         dispatchEventForLegacyPluginEventSystem(topLevelType, eventSystemFlags, nativeEvent, targetInst);
-              /*We're not blocked on anything.*/
+              // We're not blocked on anything.
 }
       // We're not blocked on anything.
       return null;
@@ -8144,7 +8133,7 @@ if ("development" !== "production") {
               // mutated. We have already warned for this in the past.
               Object.freeze(nextProp);
             }
-                      /*Relies on `updateStylesByID` not mutating `styleUpdates`.*/
+                      // Relies on `updateStylesByID` not mutating `styleUpdates`.
 }
           // Relies on `updateStylesByID` not mutating `styleUpdates`.
           setValueForStyles(domElement, nextProp);
@@ -8273,7 +8262,7 @@ if ("development" !== "production") {
       var isCustomComponentTag = isCustomComponent(tag, rawProps);
       {
         validatePropertiesInDevelopment(tag, rawProps);
-              /*TODO: Make sure that we check isMounted before firing any of these events.*/
+              // TODO: Make sure that we check isMounted before firing any of these events.
 }
       // TODO: Make sure that we check isMounted before firing any of these events.
       var props;
@@ -8571,7 +8560,7 @@ if ("development" !== "production") {
         suppressHydrationWarning = rawProps[SUPPRESS_HYDRATION_WARNING] === true;
         isCustomComponentTag = isCustomComponent(tag, rawProps);
         validatePropertiesInDevelopment(tag, rawProps);
-              /*TODO: Make sure that we check isMounted before firing any of these events.*/
+              // TODO: Make sure that we check isMounted before firing any of these events.
 }
       // TODO: Make sure that we check isMounted before firing any of these events.
       switch (tag) {
@@ -11830,8 +11819,8 @@ if ("development" !== "production") {
               if (knownHTMLTopLevelTypes.indexOf(topLevelType) === -1) {
                 error('SimpleEventPlugin: Unhandled event type, `%s`. This warning ' + 'is likely caused by a bug in React. Please file an issue.', topLevelType);
               }
-                          /*HTML Events*/
-              /*@see http://www.w3.org/TR/html5/index.html#events-0*/
+                          // HTML Events
+              // @see http://www.w3.org/TR/html5/index.html#events-0
 }
             // HTML Events
             // @see http://www.w3.org/TR/html5/index.html#events-0
@@ -12275,7 +12264,7 @@ if ("development" !== "production") {
     var emptyContextObject = {};
     {
       Object.freeze(emptyContextObject);
-          /*A cursor to the current merged context object on the stack.*/
+          // A cursor to the current merged context object on the stack.
 }
     // A cursor to the current merged context object on the stack.
     var contextStackCursor = createCursor(emptyContextObject);
@@ -12325,8 +12314,8 @@ if ("development" !== "production") {
         {
           var name = getComponentName(type) || 'Unknown';
           checkPropTypes(contextTypes, context, 'context', name, getCurrentFiberStackInDev);
-                  /*Cache unmasked context so we can avoid recreating masked context unless necessary.*/
-          /*Context is created before the class component is instantiated so check for instance.*/
+                  // Cache unmasked context so we can avoid recreating masked context unless necessary.
+          // Context is created before the class component is instantiated so check for instance.
 }
         // Cache unmasked context so we can avoid recreating masked context unless necessary.
         // Context is created before the class component is instantiated so check for instance.
@@ -13637,7 +13626,7 @@ if ("development" !== "production") {
       hasForceUpdate = false;
       {
         currentlyProcessingQueue = queue.shared;
-              /*The last rebase update that is NOT part of the base state.*/
+              // The last rebase update that is NOT part of the base state.
 }
       // The last rebase update that is NOT part of the base state.
       var baseQueue = queue.baseQueue;
@@ -13876,7 +13865,7 @@ if ("development" !== "production") {
       var partialState = getDerivedStateFromProps(nextProps, prevState);
       {
         warnOnUndefinedDerivedState(ctor, partialState);
-              /*Merge the partial state and the previous state.*/
+              // Merge the partial state and the previous state.
 }
       // Merge the partial state and the previous state.
       var memoizedState = partialState === null || partialState === undefined ? prevState : _assign({}, prevState, partialState);
@@ -14139,8 +14128,8 @@ if ("development" !== "production") {
             }
           }
         }
-              /*Cache unmasked context so we can avoid recreating masked context unless necessary.*/
-        /*ReactFiberContext usually updates this cache but can't for newly-created instances.*/
+              // Cache unmasked context so we can avoid recreating masked context unless necessary.
+        // ReactFiberContext usually updates this cache but can't for newly-created instances.
 }
       // Cache unmasked context so we can avoid recreating masked context unless necessary.
       // ReactFiberContext usually updates this cache but can't for newly-created instances.
@@ -15519,7 +15508,7 @@ if ("development" !== "production") {
     var didWarnAboutMismatchedHooksForComponent;
     {
       didWarnAboutMismatchedHooksForComponent = new Set();
-          /*These are set right before calling the component.*/
+          // These are set right before calling the component.
 }
     // These are set right before calling the component.
     var renderExpirationTime = NoWork;
@@ -15693,7 +15682,7 @@ if ("development" !== "production") {
             // Even when hot reloading, allow dependencies to stabilize
             // after first render to prevent infinite render phase updates.
             ignorePreviousDependencies = false;
-                      /*Start over from the beginning of the list*/
+                      // Start over from the beginning of the list
 }
           // Start over from the beginning of the list
           currentHook = null;
@@ -15712,8 +15701,8 @@ if ("development" !== "production") {
       ReactCurrentDispatcher.current = ContextOnlyDispatcher;
       {
         workInProgress._debugHookTypes = hookTypesDev;
-              /*This check uses currentHook so that it works the same in DEV and prod bundles.*/
-        /*hookTypesDev could catch more cases (e.g. context) but only in DEV bundles.*/
+              // This check uses currentHook so that it works the same in DEV and prod bundles.
+        // hookTypesDev could catch more cases (e.g. context) but only in DEV bundles.
 }
       // This check uses currentHook so that it works the same in DEV and prod bundles.
       // hookTypesDev could catch more cases (e.g. context) but only in DEV bundles.
@@ -16166,7 +16155,7 @@ if ("development" !== "production") {
         if (typeof create !== 'function') {
           error('Expected useImperativeHandle() second argument to be a function ' + 'that creates a handle. Instead received: %s.', create !== null ? typeof create : 'null');
         }
-              /*TODO: If deps are provided, should we skip comparing the ref itself?*/
+              // TODO: If deps are provided, should we skip comparing the ref itself?
 }
       // TODO: If deps are provided, should we skip comparing the ref itself?
       var effectDeps = deps !== null && deps !== undefined ? deps.concat([ref]) : null;
@@ -16177,7 +16166,7 @@ if ("development" !== "production") {
         if (typeof create !== 'function') {
           error('Expected useImperativeHandle() second argument to be a function ' + 'that creates a handle. Instead received: %s.', create !== null ? typeof create : 'null');
         }
-              /*TODO: If deps are provided, should we skip comparing the ref itself?*/
+              // TODO: If deps are provided, should we skip comparing the ref itself?
 }
       // TODO: If deps are provided, should we skip comparing the ref itself?
       var effectDeps = deps !== null && deps !== undefined ? deps.concat([ref]) : null;
@@ -16319,7 +16308,7 @@ if ("development" !== "production") {
       };
       {
         update.priority = getCurrentPriorityLevel();
-              /*Append the update to the end of the list.*/
+              // Append the update to the end of the list.
 }
       // Append the update to the end of the list.
       var pending = queue.pending;
@@ -17456,9 +17445,9 @@ if ("development" !== "production") {
           var resolvedType = type;
           {
             resolvedType = resolveFunctionForHotReloading(type);
-                      /*If this is a plain function component without default props,*/
-            /*and with only the default shallow comparison, we upgrade it*/
-            /*to a SimpleMemoComponent to allow fast path updates.*/
+                      // If this is a plain function component without default props,
+            // and with only the default shallow comparison, we upgrade it
+            // to a SimpleMemoComponent to allow fast path updates.
 }
           // If this is a plain function component without default props,
           // and with only the default shallow comparison, we upgrade it
@@ -17641,9 +17630,9 @@ if ("development" !== "production") {
             'prop', getComponentName(Component), getCurrentFiberStackInDev);
           }
         }
-              /*Push context providers early to prevent context stack mismatches.*/
-        /*During mounting we don't know the child context yet as the instance doesn't exist.*/
-        /*We will invalidate the child context in finishClassComponent() right after rendering.*/
+              // Push context providers early to prevent context stack mismatches.
+        // During mounting we don't know the child context yet as the instance doesn't exist.
+        // We will invalidate the child context in finishClassComponent() right after rendering.
 }
       // Push context providers early to prevent context stack mismatches.
       // During mounting we don't know the child context yet as the instance doesn't exist.
@@ -17832,7 +17821,7 @@ if ("development" !== "production") {
       if (workInProgress.mode & ConcurrentMode && renderExpirationTime !== Never && shouldDeprioritizeSubtree(type, nextProps)) {
         {
           markSpawnedWork(Never);
-                  /*Schedule this fiber to re-render at offscreen priority. Then bailout.*/
+                  // Schedule this fiber to re-render at offscreen priority. Then bailout.
 }
         // Schedule this fiber to re-render at offscreen priority. Then bailout.
         workInProgress.expirationTime = workInProgress.childExpirationTime = Never;
@@ -17918,9 +17907,9 @@ if ("development" !== "production") {
         if (Component !== null && typeof Component === 'object' && Component.$$typeof === REACT_LAZY_TYPE) {
           hint = ' Did you wrap a component in React.lazy() more than once?';
         }
-              /*This message intentionally doesn't mention ForwardRef or MemoComponent*/
-        /*because the fact that it's a separate type of work is an*/
-        /*implementation detail.*/
+              // This message intentionally doesn't mention ForwardRef or MemoComponent
+        // because the fact that it's a separate type of work is an
+        // implementation detail.
 }
       // This message intentionally doesn't mention ForwardRef or MemoComponent
       // because the fact that it's a separate type of work is an
@@ -17994,7 +17983,7 @@ if ("development" !== "production") {
         ReactCurrentOwner$1.current = workInProgress;
         value = renderWithHooks(null, workInProgress, Component, props, context, renderExpirationTime);
         setIsRendering(false);
-              /*React DevTools reads this flag.*/
+              // React DevTools reads this flag.
 }
       // React DevTools reads this flag.
       workInProgress.effectTag |= PerformedWork;
@@ -18005,7 +17994,7 @@ if ("development" !== "production") {
             error('The <%s /> component appears to be a function component that returns a class instance. ' + 'Change %s to a class that extends React.Component instead. ' + "If you can't use a class try assigning the prototype on the function as a workaround. " + "`%s.prototype = React.Component.prototype`. Don't use an arrow function since it " + 'cannot be called with `new` by React.', _componentName, _componentName, _componentName);
             didWarnAboutModulePatternComponent[_componentName] = true;
           }
-                  /*Proceed under the assumption that this is a class instance*/
+                  // Proceed under the assumption that this is a class instance
 }
         // Proceed under the assumption that this is a class instance
         workInProgress.tag = ClassComponent;
@@ -18684,7 +18673,7 @@ if ("development" !== "production") {
         setIsRendering(true);
         newChildren = render(newValue);
         setIsRendering(false);
-              /*React DevTools reads this flag.*/
+              // React DevTools reads this flag.
 }
       // React DevTools reads this flag.
       workInProgress.effectTag |= PerformedWork;
@@ -18800,7 +18789,7 @@ if ("development" !== "production") {
               if (workInProgress.mode & ConcurrentMode && renderExpirationTime !== Never && shouldDeprioritizeSubtree(workInProgress.type, newProps)) {
                 {
                   markSpawnedWork(Never);
-                                  /*Schedule this fiber to re-render at offscreen priority. Then bailout.*/
+                                  // Schedule this fiber to re-render at offscreen priority. Then bailout.
 }
                 // Schedule this fiber to re-render at offscreen priority. Then bailout.
                 workInProgress.expirationTime = workInProgress.childExpirationTime = Never;
@@ -19961,9 +19950,9 @@ if ("development" !== "production") {
                     error('Expected %s state to match memoized state before ' + 'processing the update queue. ' + 'This might either be because of a bug in React, or because ' + 'a component reassigns its own `this.props`. ' + 'Please file an issue.', getComponentName(finishedWork.type) || 'instance');
                   }
                 }
-                              /*We could update instance props and state here,*/
-                /*but instead we rely on them being set during last render.*/
-                /*TODO: revisit this when we implement resuming.*/
+                              // We could update instance props and state here,
+                // but instead we rely on them being set during last render.
+                // TODO: revisit this when we implement resuming.
 }
               // We could update instance props and state here,
               // but instead we rely on them being set during last render.
@@ -21618,9 +21607,9 @@ if ("development" !== "production") {
           if ((executionContext & RenderContext) !== NoContext) {
             error('unstable_flushDiscreteUpdates: Cannot flush updates when React is ' + 'already rendering.');
           }
-                  /*We're already rendering, so we can't synchronously flush pending work.*/
-          /*This is probably a nested event dispatch triggered by a lifecycle/effect,*/
-          /*like `el.focus()`. Exit.*/
+                  // We're already rendering, so we can't synchronously flush pending work.
+          // This is probably a nested event dispatch triggered by a lifecycle/effect,
+          // like `el.focus()`. Exit.
 }
         // We're already rendering, so we can't synchronously flush pending work.
         // This is probably a nested event dispatch triggered by a lifecycle/effect,
@@ -22205,7 +22194,7 @@ if ("development" !== "production") {
           // Mark the current commit time to be shared by all Profilers in this
           // batch. This enables them to be grouped later.
           recordCommitTime();
-                  /*The next phase is the mutation phase, where we mutate the host tree.*/
+                  // The next phase is the mutation phase, where we mutate the host tree.
 }
         // The next phase is the mutation phase, where we mutate the host tree.
         startCommitHostEffectsTimer();
@@ -23015,7 +23004,7 @@ if ("development" !== "production") {
       if (!hook.supportsFiber) {
         {
           error('The installed version of React DevTools is too old and will not work ' + 'with the current version of React. Please update React DevTools. ' + 'https://fb.me/react-devtools');
-                  /*DevTools exists, even though it doesn't support Fiber.*/
+                  // DevTools exists, even though it doesn't support Fiber.
 }
         // DevTools exists, even though it doesn't support Fiber.
         return true;
@@ -23162,8 +23151,8 @@ if ("development" !== "production") {
         this.actualStartTime = -1;
         this.selfBaseDuration = 0;
         this.treeBaseDuration = 0;
-              /*This is normally DEV-only except www when it adds listeners.*/
-        /*TODO: remove the User Timing integration in favor of Root Events.*/
+              // This is normally DEV-only except www when it adds listeners.
+        // TODO: remove the User Timing integration in favor of Root Events.
 }
       // This is normally DEV-only except www when it adds listeners.
       // TODO: remove the User Timing integration in favor of Root Events.
@@ -24104,8 +24093,8 @@ if ("development" !== "production") {
       {
         topLevelUpdateWarnings(container);
         warnOnInvalidCallback$1(callback === undefined ? null : callback, 'render');
-              /*TODO: Without `any` type, Flow says "Property cannot be accessed on any*/
-        /*member of intersection type." Whyyyyyy.*/
+              // TODO: Without `any` type, Flow says "Property cannot be accessed on any
+        // member of intersection type." Whyyyyyy.
 }
       // TODO: Without `any` type, Flow says "Property cannot be accessed on any
       // member of intersection type." Whyyyyyy.
@@ -24172,7 +24161,7 @@ if ("development" !== "production") {
         if (isModernRoot) {
           error('You are calling ReactDOM.hydrate() on a container that was previously ' + 'passed to ReactDOM.createRoot(). This is not supported. ' + 'Did you mean to call createRoot(container, {hydrate: true}).render(element)?');
         }
-              /*TODO: throw or warn if we couldn't hydrate?*/
+              // TODO: throw or warn if we couldn't hydrate?
 }
       // TODO: throw or warn if we couldn't hydrate?
       return legacyRenderSubtreeIntoContainer(null, element, container, true, callback);
@@ -24223,7 +24212,7 @@ if ("development" !== "production") {
           if (renderedByDifferentReact) {
             error("unmountComponentAtNode(): The node you're attempting to unmount " + 'was rendered by another copy of React.');
           }
-                  /*Unmount should not be batched.*/
+                  // Unmount should not be batched.
 }
         // Unmount should not be batched.
         unbatchedUpdates(function () {
@@ -24337,7 +24326,7 @@ if ("development" !== "production") {
   })();
 }
 
-},{"react":"3b2NM","object-assign":"3eM6x","scheduler":"5K4BD","prop-types/checkPropTypes":"R8SC7","scheduler/tracing":"6jIZo"}],"5K4BD":[function(require,module,exports) {
+},{"react":"10gzA","object-assign":"59hdi","scheduler":"40VKN","prop-types/checkPropTypes":"2Q34F","scheduler/tracing":"4ZRPx"}],"40VKN":[function(require,module,exports) {
 "use strict";
 if ("development" === 'production') {
   module.exports = require('./cjs/scheduler.production.min.js');
@@ -24345,7 +24334,7 @@ if ("development" === 'production') {
   module.exports = require('./cjs/scheduler.development.js');
 }
 
-},{"./cjs/scheduler.development.js":"59Ipp"}],"59Ipp":[function(require,module,exports) {
+},{"./cjs/scheduler.development.js":"6sELS"}],"6sELS":[function(require,module,exports) {
 /** @license React v0.19.1
 * scheduler.development.js
 *
@@ -24618,7 +24607,7 @@ if ("development" !== "production") {
       // array might include canceled tasks.
       profilingState[QUEUE_SIZE] = 0;
       profilingState[CURRENT_TASK_ID] = 0;
-          /*Bytes per element is 4*/
+          // Bytes per element is 4
 }
     // Bytes per element is 4
     var INITIAL_EVENT_LOG_SIZE = 131072;
@@ -24810,7 +24799,7 @@ if ("development" !== "production") {
     function flushWork(hasTimeRemaining, initialTime) {
       {
         markSchedulerUnsuspended(initialTime);
-              /*We'll need a host callback the next time work is scheduled.*/
+              // We'll need a host callback the next time work is scheduled.
 }
       // We'll need a host callback the next time work is scheduled.
       isHostCallbackScheduled = false;
@@ -25011,8 +25000,8 @@ if ("development" !== "production") {
         {
           markTaskStart(newTask, currentTime);
           newTask.isQueued = true;
-                  /*Schedule a host callback, if needed. If we're already performing work,*/
-          /*wait until the next time we yield.*/
+                  // Schedule a host callback, if needed. If we're already performing work,
+          // wait until the next time we yield.
 }
         // Schedule a host callback, if needed. If we're already performing work,
         // wait until the next time we yield.
@@ -25040,9 +25029,9 @@ if ("development" !== "production") {
           markTaskCanceled(task, currentTime);
           task.isQueued = false;
         }
-              /*Null out the callback to indicate the task has been canceled. (Can't*/
-        /*remove from the queue because you can't remove arbitrary nodes from an*/
-        /*array based heap, only the first one.)*/
+              // Null out the callback to indicate the task has been canceled. (Can't
+        // remove from the queue because you can't remove arbitrary nodes from an
+        // array based heap, only the first one.)
 }
       // Null out the callback to indicate the task has been canceled. (Can't
       // remove from the queue because you can't remove arbitrary nodes from an
@@ -25084,7 +25073,7 @@ if ("development" !== "production") {
   })();
 }
 
-},{}],"6jIZo":[function(require,module,exports) {
+},{}],"4ZRPx":[function(require,module,exports) {
 "use strict";
 if ("development" === 'production') {
   module.exports = require('./cjs/scheduler-tracing.production.min.js');
@@ -25092,7 +25081,7 @@ if ("development" === 'production') {
   module.exports = require('./cjs/scheduler-tracing.development.js');
 }
 
-},{"./cjs/scheduler-tracing.development.js":"2qFgQ"}],"2qFgQ":[function(require,module,exports) {
+},{"./cjs/scheduler-tracing.development.js":"6OMMb"}],"6OMMb":[function(require,module,exports) {
 /** @license React v0.19.1
 * scheduler-tracing.development.js
 *
@@ -25400,7 +25389,7 @@ if ("development" !== "production") {
   })();
 }
 
-},{}],"1jUZz":[function() {},{}],"6gclC":[function(require,module,exports) {
+},{}],"1jUZz":[function() {},{}],"5Hppv":[function(require,module,exports) {
 "use strict";
 
 exports.interopDefault = function (a) {
@@ -25442,7 +25431,7 @@ exports.export = function (dest, destName, get) {
     get: get
   });
 };
-},{}],"4ZIw9":[function(require,module,exports) {
+},{}],"munH3":[function(require,module,exports) {
 "use strict";
 var Refresh = require('react-refresh/runtime');
 function debounce(func, delay) {
@@ -25599,6 +25588,6 @@ function registerExportsForReactRefresh(module) {
   }
 }
 
-},{"react-refresh/runtime":"5Otwx"}]},["1j6wU","7sNyx","5rkFb"], "5rkFb", "parcelRequiree691")
+},{"react-refresh/runtime":"5Otwx"}]},["1j6wU","3Imd1","5rkFb"], "5rkFb", "parcelRequiree691")
 
 //# sourceMappingURL=index.3fafb3e2.js.map
