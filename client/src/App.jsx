@@ -1,9 +1,13 @@
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from "react"
 
 function App() {
 
-  let table = [];
-  const [data, setData] = useState("")
+  const [isLoading, setLoading] = useState(true)
+  const [html, setHTML] = useState("")
+  useEffect(() => {
+    setHTML("Hello, world!")
+  }, [isLoading])
+
   const [selection, setSelection] = useState(5)
 
   useEffect(() => {
@@ -16,47 +20,24 @@ function App() {
     }).then(response => {
       if (response.ok) {
         return response.json();
+      } else {
+        throw response
       }
-      throw response;
     }).then(result => {
-      
-      const headers = []
-      const tbody = result.items.map(row => {
-        const cells = Object.keys(row).map(column => {
-          if (column.indexOf(headers) == -1) {
-            headers.push(column)
-          }
-          return <td>{row[column]}</td>;
-        })
-        return <tr>{cells}</tr>;
-      });
-
-      const thead = headers.map(column => {
-        return <th>{column}</th>;
-      });
-
-      table = (
-        <table>
-          <thead>
-            <tr>{thead}</tr>
-          </thead>
-          <tbody>
-            {tbody}
-          </tbody>
-        </table>
-      );
-
+      setHTML(result.html)
+    }).catch(error => {
+      throw new Error(error)
     });
   }, [selection]);
 
   return (
     <>
       <header className="header">
-        <p>R Plumber</p>
+        <h1>R Plumber</h1>
       </header>
       <main className="main">
         <section className="section">
-          <h1>R Plumber Example</h1>
+          <h2>R Plumber Example</h2>
           <p>This application demonstrates how to integrate React and R using the Plumber package. This example app also builds on other tutorials and examples in the <a href="https://github.com/davidruvolo51/shinyAppTutorials">shinyAppTutorials</a> project. In the following section, select how many rows you would like to display from the <a href="https://github.com/allisonhorst/palmerpenguins">palmerpenguins</a> dataset. The response is a html generated table as described in the <a href="https://github.com/davidruvolo51/shinyAppTutorials/tree/main/responsive-datatables">responsive datatable example</a></p>
         </section>
         <section className="section" id="table_output">
@@ -73,14 +54,11 @@ function App() {
               {/* <option value="999">All</option> */}
             </select>
           </form>
-          <div>
-            {table}
-          </div>
+          <div dangerouslySetInnerHTML={{ __html: html }} />
         </section>
       </main>
     </>
   )
 }
-
 
 export default App
