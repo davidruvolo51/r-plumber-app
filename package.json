@@ -4,7 +4,7 @@
   "description": "using r plumber for interactive web apps",
   "main": "index.js",
   "scripts": {
-    "client": "cd client && yarn start",
+    "client": "cd client && yarn dev",
     "server": "Rscript -e \"source('server.R')\"",
     "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\""
   },
@@ -17,5 +17,9 @@
   "license": "ISC",
   "devDependencies": {
     "concurrently": "^7.0.0"
+  },
+  "dependencies": {
+    "parcel": "^2.9.3",
+    "react": "^18.2.0"
   }
 }
