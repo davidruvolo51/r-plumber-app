@@ -195,16 +195,18 @@ datatable <- function(
         `data-value-num-type` = "NaN"
     )
 
-    if (!is.na(value) && value_class %in% c("integer", "numeric", "double")) {
-        attr$`data-col-align` <- "right"
-        if (!is.na(value) && value > 0) {
-            attr$`data-value-num-type` <- "positive"
-        }
-        if (!is.na(value) && value < 0) {
-            attr$`data-value-num-type` <- "negative"
-        }
-        if (!is.na(value) && value == 0) {
-            attr$`data-value-num-type` <- "zero"
+    if (!is.na(value)) {
+        if (value_class %in% c("integer", "numeric", "double")) {
+            attr$`data-col-align` <- "right"
+            if (value > 0) {
+                attr$`data-value-num-type` <- "positive"
+            }
+            if (value < 0) {
+                attr$`data-value-num-type` <- "negative"
+            }
+            if (value == 0) {
+                attr$`data-value-num-type` <- "zero"
+            }
         }
     }
 
@@ -354,10 +356,10 @@ datatable <- function(
             cell_value
         )
 
-        attr <- .datatable__helpers$set__cell__attribs(index, data[1, index])
-        c$attribs$`data-col` <- attr$`data-col`
-        c$attribs$`data-col-name` <- col
-        c$attribs$`data-col-align` <- attr$`data-col-align`
+        # attr <- .datatable__helpers$set__cell__attribs(index, data[1, index])
+        # c$attribs$`data-col` <- attr$`data-col`
+        # c$attribs$`data-col-name` <- col
+        # c$attribs$`data-col-align` <- attr$`data-col-align`
 
         index <<- index + 1
         return(c)
