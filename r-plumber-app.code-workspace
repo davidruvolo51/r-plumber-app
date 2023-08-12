@@ -9,7 +9,8 @@
 			"MD007": {
 				"indent": 4
 			}
-		}
+		},
+		"r.lsp.promptToInstall": false
 	},
 	"extensions": {
 		"recommendations": [

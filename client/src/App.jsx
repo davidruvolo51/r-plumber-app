@@ -2,12 +2,7 @@ import { useEffect, useState } from "react"
 
 function App() {
 
-  const [isLoading, setLoading] = useState(true)
   const [html, setHTML] = useState("")
-  useEffect(() => {
-    setHTML("Hello, world!")
-  }, [isLoading])
-
   const [selection, setSelection] = useState(5)
 
   useEffect(() => {

@@ -4,7 +4,7 @@
   "description": "using r plumber for interactive web apps",
   "main": "index.js",
   "scripts": {
-    "client": "cd client && yarn dev",
+    "client": "cd client && yarn build",
     "server": "Rscript -e \"source('server.R')\"",
     "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\""
   },
