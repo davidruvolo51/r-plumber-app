@@ -9,7 +9,7 @@ The `r-plumber-react` app demonstrates how to create a React application that us
     - Node: [https://nodejs.org/](https://nodejs.org/)
 - Frontend
     - React: [https://reactjs.org](https://reactjs.org)
-    - ParcelJS: [https://parceljs.org](https://parceljs.org)
+    - Vite: [https://vitejs.dev](https://vitejs.dev)
 
 ## Getting Started
 
